@@ -5,12 +5,24 @@
  * Author : amandaseier
  */ 
 
+#define F_CPU 16000000UL
 #include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdbool.h>
 
 
 int main(void)
 {
-    /* Replace with your application code */
+	// INIT MODULES
+		// Motor
+		// Sound
+	
+	// BUTTONPRESS
+		// Start the car
+	
+	// The track will be ran
+	
     while (1) 
     {
     }
