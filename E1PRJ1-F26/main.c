@@ -2,7 +2,7 @@
  * E1PRJ1-F26.c
  *
  * Created: 06-05-2026 21:14:32
- * Author : amandaseier
+ * Author : anton, isam, jamal, abdi, hewad & amamda (SW5)
  */ 
 
 #define F_CPU 16000000UL
@@ -11,15 +11,17 @@
 #include <util/delay.h>
 #include <stdbool.h>
 
-
+// Main program
 int main(void)
 {
 	// INIT MODULES
 		// Motor
 		// Sound
+		// Backlight
+		// Frontlight
 	
 	// BUTTONPRESS
-		// Start the car
+		// Start the car when SW0 has been pressed on the MEGA 2560
 	
 	// The track will be ran
 	
