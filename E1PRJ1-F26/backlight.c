@@ -2,32 +2,29 @@
  * backLight.c
  *
  * Created: 06-05-2026 21:59:01
- *  Author: amandaseier
+ *  Author: amanda
  */ 
 
 #include "backLight.h"
 
-void backLightInit() {
-	DDRB |= (1 << PB6); // PB6 sættes som output
+void initBackLight(void) {
+	DDRB |= (1 << PB4); // Pin 10 output
 	
-	// opsætning af Timer 1 til fast PWM mode
-	TCCR1A |= (1 << COM1B1) | (1 << WGM10);
-	TCCR1B |= (1 << WGM12) | (1 << CS11) | (1 << CS10);
+	// Timer 2: 8-bit Fast PWM (Mode 3)
+	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20);
+	TCCR2B = (1 << CS21); // Prescaler 8
 	
-	OCR1B = 0; // baglyset er slukket som standard
+	OCR2A = 0;
 }
 
 void setBackLight(bool state) {
-	// Hvis state er True
-		// Baglysene tændes (PWM = 20%)
-	
-	// Hvis state er False
-		// Baglysene slukkes (PWM = 0%)
+	if (state) {
+		OCR2A = 255; // Bremselys
+		} else {
+		OCR2A = 0; // Slukket
+	}
 }
 
-
-void backLightPWM(int intensity) {
-	
+void backLightPWM(uint8_t intensity) {
+	OCR2A = intensity;
 }
-
-

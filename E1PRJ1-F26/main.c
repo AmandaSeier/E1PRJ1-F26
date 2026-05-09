@@ -22,6 +22,7 @@ int main(void)
 	
 	// BUTTONPRESS
 		// Start the car when SW0 has been pressed on the MEGA 2560
+		// Lights will be turned on
 	
 	// The track will be ran
 	
