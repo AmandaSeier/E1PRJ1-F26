@@ -21,7 +21,9 @@ void initFrontLight(void) {
 void setFrontLight(bool state) {
 	if (state) {
 		OCR1A = 255;
+		TCCR1A = (1 << COM1A1) | (1 << WGM10);
 		} else {
+		TCCR1A &= ~(1 << COM1A1);
 		OCR1A = 0;
 	}
 }

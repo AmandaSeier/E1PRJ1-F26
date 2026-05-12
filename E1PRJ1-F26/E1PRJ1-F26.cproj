@@ -110,7 +110,7 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="backlight.c">
+    <Compile Include="backLight.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="backLight.h">
@@ -120,9 +120,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="frontLight.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lightTest.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">

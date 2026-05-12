@@ -20,11 +20,14 @@ void initBackLight(void) {
 void setBackLight(bool state) {
 	if (state) {
 		OCR2A = 255; // Bremselys
+		TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20);
 		} else {
+		TCCR2A &= ~(1 << COM2A1);
 		OCR2A = 0; // Slukket
 	}
 }
 
 void backLightPWM(uint8_t intensity) {
+	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20);
 	OCR2A = intensity;
 }

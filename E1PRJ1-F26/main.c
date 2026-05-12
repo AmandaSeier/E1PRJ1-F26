@@ -7,27 +7,43 @@
 
 #define F_CPU 16000000UL
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdbool.h>
+#include "backLight.h"
+#include "frontLight.h"
 
-// Main program
-int main(void)
-{
-	// INIT MODULES
-		// Motor
-		// Sound
-		// Backlight
-		// Frontlight
-	
-	// BUTTONPRESS
-		// Start the car when SW0 has been pressed on the MEGA 2560
-		// Lights will be turned on
-	
-	// The track will be ran
-	
-    while (1) 
-    {
+int main(void) {
+	// Initialisering af lysmoduler
+    initBackLight();
+    initFrontLight();
+
+    DDRA &= ~(1 << PA0);   // SW0 som input
+    DDRA &= ~(1 << PA1);   // SW1 som input
+
+    PORTA |= (1 << PA0);   // pull-up SW0
+    PORTA |= (1 << PA1);   // pull-up SW1
+
+    while (1) {
+        bool sw0 = !(PINA & (1 << PA0));   // aktiv LOW
+        bool sw1 = !(PINA & (1 << PA1));   // aktiv LOW
+
+		// Bilen kører
+        if (sw1 == true) {
+            setFrontLight(true);
+			backLightPWM(51);
+        }
+		
+		// Bilen bremser
+        else if (sw0 == true) {
+            setFrontLight(true);
+            backLightPWM(255);
+        }
+		
+		// Hvis bilen er slukket
+        else {
+            // Ingen tryk, så slukkes begge lysmoduler
+            setBackLight(false);
+            setFrontLight(false);
+        }
     }
 }
-

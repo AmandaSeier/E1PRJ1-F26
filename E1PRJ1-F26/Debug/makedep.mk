@@ -6,7 +6,5 @@ backLight.c
 
 frontLight.c
 
-lightTest.c
-
 main.c
 
