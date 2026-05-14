@@ -12,6 +12,9 @@
 #include <stdbool.h>
 
 #define BACKLIGHT_PIN PB4
+#define BACKLIGHT_BRAKE 255
+#define BACKLIGHT_OFF 0
+#define BACKLIGHT_DRIVE 51
 
 void initBackLight(void); // Initialisering af baglys
 void setBackLight(bool state); // Tænder/slukker baglyset

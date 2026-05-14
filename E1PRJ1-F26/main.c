@@ -17,11 +17,11 @@ int main(void) {
     initBackLight();
     initFrontLight();
 
-    DDRA &= ~(1 << PA0);   // SW0 som input
-    DDRA &= ~(1 << PA1);   // SW1 som input
+    DDRA &= ~(1 << PA0); // SW0 som input
+    DDRA &= ~(1 << PA1); // SW1 som input
 
-    PORTA |= (1 << PA0);   // pull-up SW0
-    PORTA |= (1 << PA1);   // pull-up SW1
+    PORTA |= (1 << PA0); // pull-up SW0
+    PORTA |= (1 << PA1); // pull-up SW1
 
     while (1) {
         bool sw0 = !(PINA & (1 << PA0));   // aktiv LOW
@@ -30,13 +30,13 @@ int main(void) {
 		// Bilen kører
         if (sw1 == true) {
             setFrontLight(true);
-			backLightPWM(51);
+			backLightPWM(BACKLIGHT_DRIVE);
         }
 		
 		// Bilen bremser
         else if (sw0 == true) {
             setFrontLight(true);
-            backLightPWM(255);
+            backLightPWM(BACKLIGHT_BRAKE);
         }
 		
 		// Hvis bilen er slukket
