@@ -8,14 +8,23 @@
 #include "frontLight.h"
 
 void initFrontLight(void) {
-    DDRB |= (1 << FRONTLIGHT_PIN); // PB5 (pin 11) som output
-    PORTB &= ~(1 << FRONTLIGHT_PIN); // Start med lyset slukket
+	DDRB |= (1 << PB5); // Pin 11 output
+	DDRB |= (1 << FRONTLIGHT_PIN); // Pin 11 output (PB5)
+	
+	// Timer 1: 8-bit Fast PWM (Mode 5)
+	TCCR1A = (1 << COM1A1) | (1 << WGM10);
+	TCCR1B = (1 << WGM12) | (1 << CS11); // Prescaler 8
+
+	OCR1A = FRONTLIGHT_OFF;
 }
 
 void setFrontLight(bool state) {
-    if (state == true) {
-        PORTB |= (1 << FRONTLIGHT_PIN); // Tænd forlyset
-    } else {
-        PORTB &= ~(1 << FRONTLIGHT_PIN); // Sluk forlyset
-    }
+	if (state == true) {
+		OCR1A = FRONTLIGHT_ON;
+		TCCR1A = (1 << COM1A1) | (1 << WGM10);
+	} 
+	else {
+		TCCR1A &= ~(1 << COM1A1);
+		OCR1A = FRONTLIGHT_OFF;
+	}
 }
