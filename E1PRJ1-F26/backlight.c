@@ -14,21 +14,21 @@ void initBackLight(void) {
 	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
 	TCCR2B = (1 << CS21); // Prescaler = 8
 	
-	OCR2A = BACKLIGHT_OFF; // Start med lyset slukket
+	OCR2A = BACKLIGHT_OFF; // Start med baglys slukket
 }
 
 void setBackLight(bool state) {
 	if (state == true) {
 		OCR2A = BACKLIGHT_BRAKE; // Bremselys 
-		TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
+		TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); // Aktivér PWM
 	}
 	else {
-		TCCR2A &= ~(1 << COM2A1); 
-		OCR2A = BACKLIGHT_OFF; // Slukket baglys
+		TCCR2A &= ~(1 << COM2A1); // Deaktivér PWM
+		OCR2A = BACKLIGHT_OFF; // Sluk baglys
 	}
 }
 
 void backLightPWM(uint8_t intensity) {
-	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
+	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); // Aktivér PWM
 	OCR2A = intensity; // Sætter PWM (0-255)
 }
