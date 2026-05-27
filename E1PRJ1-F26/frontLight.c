@@ -8,23 +8,22 @@
 #include "frontLight.h"
 
 void initFrontLight(void) {
-	DDRB |= (1 << PB5); // Pin 11 output
 	DDRB |= (1 << FRONTLIGHT_PIN); // Pin 11 output (PB5)
 	
-	// Timer 1: 8-bit Fast PWM (Mode 5)
-	TCCR1A = (1 << COM1A1) | (1 << WGM10);
-	TCCR1B = (1 << WGM12) | (1 << CS11); // Prescaler 8
+	// Timer 1 sættes i 8-bit Fast PWM non-inverting mode
+	TCCR1A = 0b10000001;           
+	TCCR1B = 0b00001010; // prescaler 8
 
-	OCR1A = FRONTLIGHT_OFF; // Forlys slukket fra start
+	OCR1A = FRONTLIGHT_OFF; // Forlyset starter slukket
 }
 
 void setFrontLight(bool state) {
 	if (state == true) {
-		OCR1A = FRONTLIGHT_ON; // Tændt forlys
-		TCCR1A = (1 << COM1A1) | (1 << WGM10); // Aktivér PWM
-	} 
+		OCR1A = FRONTLIGHT_ON; // Tænd forlys
+		TCCR1A = 0b10000001; // Aktivér PWM 
+	}
 	else {
-		TCCR1A &= ~(1 << COM1A1); // Deaktivér PWM
-		OCR1A = FRONTLIGHT_OFF; // Slukket forlys
+		TCCR1A &= 0b01111111; // Deaktivér PWM 
+		OCR1A = FRONTLIGHT_OFF; // Sluk forlyset
 	}
 }

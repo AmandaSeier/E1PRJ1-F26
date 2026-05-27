@@ -9,26 +9,26 @@
 
 void initBackLight(void) {
 	DDRB |= (1 << BACKLIGHT_PIN); // PB4 (pin 10) som output
-	
-	// Timer 2 i 8-bit Fast PWM (Mode 3) og non-inverting mode
-	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
-	TCCR2B = (1 << CS21); // Prescaler = 8
-	
+
+	// Timer 2 sættes i 8-bit Fast PWM non-inverting mode
+	TCCR2A = 0b10000011;
+	TCCR2B = 0b00000010; // Prescaler 8
+
 	OCR2A = BACKLIGHT_OFF; // Start med baglys slukket
 }
 
 void setBackLight(bool state) {
 	if (state == true) {
-		OCR2A = BACKLIGHT_BRAKE; // Bremselys 
-		TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); // Aktivér PWM
+		OCR2A = BACKLIGHT_BRAKE; // Tænd bremselys
+		TCCR2A = 0b10000011;  // Aktiver PWM 
 	}
 	else {
-		TCCR2A &= ~(1 << COM2A1); // Deaktivér PWM
+		TCCR2A &= 0b01111111; // Deaktivér PWM 
 		OCR2A = BACKLIGHT_OFF; // Sluk baglys
 	}
 }
 
 void backLightPWM(uint8_t intensity) {
-	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); // Aktivér PWM
-	OCR2A = intensity; // Sætter PWM (0-255)
+	TCCR2A = 0b10000011; // Aktiver PWM
+	OCR2A = intensity; // Indstiller PWM (0–255)
 }
