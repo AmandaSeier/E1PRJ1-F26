@@ -23,7 +23,7 @@ void setFrontLight(bool state) {
 		TCCR1A = 0b10000001; // Aktivér PWM 
 	}
 	else {
-		TCCR1A &= 0b01111111; // Deaktivér PWM 
 		OCR1A = FRONTLIGHT_OFF; // Sluk forlyset
+		TCCR1A &= 0b01111111; // Deaktivér PWM 
 	}
 }

@@ -23,8 +23,9 @@ void setBackLight(bool state) {
 		TCCR2A = 0b10000011;  // Aktiver PWM 
 	}
 	else {
-		TCCR2A &= 0b01111111; // Deaktivér PWM 
 		OCR2A = BACKLIGHT_OFF; // Sluk baglys
+		TCCR2A &= 0b01111111; // Deaktivér PWM
+
 	}
 }
 

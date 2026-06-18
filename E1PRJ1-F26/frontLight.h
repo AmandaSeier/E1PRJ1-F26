@@ -13,7 +13,7 @@
 
 #define FRONTLIGHT_PIN PB5
 #define FRONTLIGHT_OFF 0
-#define FRONTLIGHT_ON 200
+#define FRONTLIGHT_ON 204
 
 void initFrontLight(void); // Initialisering af forlys
 void setFrontLight(bool state); // Slukker/tænder forlyset

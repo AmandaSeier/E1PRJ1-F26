@@ -3,29 +3,29 @@ E1PRJ1-F26.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800200  00800200  00000232  2**0
+  0 .data         00000000  00800200  00800200  0000022c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000001de  00000000  00000000  00000054  2**1
+  1 .text         000001d8  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000232  2**0
+  2 .comment      00000030  00000000  00000000  0000022c  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000264  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000025c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000078  00000000  00000000  000002a4  2**0
+  4 .debug_aranges 00000078  00000000  00000000  0000029c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000ed8  00000000  00000000  0000031c  2**0
+  5 .debug_info   00000ed8  00000000  00000000  00000314  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000cf5  00000000  00000000  000011f4  2**0
+  6 .debug_abbrev 00000cf5  00000000  00000000  000011ec  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000004fd  00000000  00000000  00001ee9  2**0
+  7 .debug_line   000004f7  00000000  00000000  00001ee1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000009c  00000000  00000000  000023e8  2**2
+  8 .debug_frame  0000009c  00000000  00000000  000023d8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000005b1  00000000  00000000  00002484  2**0
+  9 .debug_str    000005bd  00000000  00000000  00002474  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000074  00000000  00000000  00002a35  2**0
+ 10 .debug_loc    00000074  00000000  00000000  00002a31  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000048  00000000  00000000  00002aa9  2**0
+ 11 .debug_ranges 00000048  00000000  00000000  00002aa5  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -155,8 +155,8 @@ Disassembly of section .text:
   ee:	cd bf       	out	0x3d, r28	; 61
   f0:	00 e0       	ldi	r16, 0x00	; 0
   f2:	0c bf       	out	0x3c, r16	; 60
-  f4:	4c d0       	rcall	.+152    	; 0x18e <main>
-  f6:	71 c0       	rjmp	.+226    	; 0x1da <_exit>
+  f4:	49 d0       	rcall	.+146    	; 0x188 <main>
+  f6:	6e c0       	rjmp	.+220    	; 0x1d4 <_exit>
 
 000000f8 <__bad_interrupt>:
   f8:	83 cf       	rjmp	.-250    	; 0x0 <__vectors>
@@ -171,16 +171,16 @@ void initBackLight(void) {
   fa:	84 b1       	in	r24, 0x04	; 4
   fc:	80 61       	ori	r24, 0x10	; 16
   fe:	84 b9       	out	0x04, r24	; 4
-	
-	// Timer 2 i 8-bit Fast PWM (Mode 3) og non-inverting mode
-	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
+
+	// Timer 2 sættes i 8-bit Fast PWM non-inverting mode
+	TCCR2A = 0b10000011;
  100:	83 e8       	ldi	r24, 0x83	; 131
  102:	80 93 b0 00 	sts	0x00B0, r24	; 0x8000b0 <__TEXT_REGION_LENGTH__+0x7c00b0>
-	TCCR2B = (1 << CS21); // Prescaler = 8
+	TCCR2B = 0b00000010; // Prescaler 8
  106:	82 e0       	ldi	r24, 0x02	; 2
  108:	80 93 b1 00 	sts	0x00B1, r24	; 0x8000b1 <__TEXT_REGION_LENGTH__+0x7c00b1>
-	
-	OCR2A = BACKLIGHT_OFF; // Start med lyset slukket
+
+	OCR2A = BACKLIGHT_OFF; // Start med baglys slukket
  10c:	10 92 b3 00 	sts	0x00B3, r1	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7c00b3>
  110:	08 95       	ret
 
@@ -191,22 +191,22 @@ void setBackLight(bool state) {
 	if (state == true) {
  112:	88 23       	and	r24, r24
  114:	39 f0       	breq	.+14     	; 0x124 <setBackLight+0x12>
-		OCR2A = BACKLIGHT_BRAKE; // Bremselys 
+		OCR2A = BACKLIGHT_BRAKE; // Tænd bremselys
  116:	8f ef       	ldi	r24, 0xFF	; 255
  118:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7c00b3>
-		TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
+		TCCR2A = 0b10000011;  // Aktiver PWM 
  11c:	83 e8       	ldi	r24, 0x83	; 131
  11e:	80 93 b0 00 	sts	0x00B0, r24	; 0x8000b0 <__TEXT_REGION_LENGTH__+0x7c00b0>
  122:	08 95       	ret
 	}
 	else {
-		TCCR2A &= ~(1 << COM2A1); 
+		TCCR2A &= 0b01111111; // Deaktivér PWM 
  124:	e0 eb       	ldi	r30, 0xB0	; 176
  126:	f0 e0       	ldi	r31, 0x00	; 0
  128:	80 81       	ld	r24, Z
  12a:	8f 77       	andi	r24, 0x7F	; 127
  12c:	80 83       	st	Z, r24
-		OCR2A = BACKLIGHT_OFF; // Slukket baglys
+		OCR2A = BACKLIGHT_OFF; // Sluk baglys
  12e:	10 92 b3 00 	sts	0x00B3, r1	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7c00b3>
  132:	08 95       	ret
 
@@ -215,10 +215,10 @@ void setBackLight(bool state) {
 }
 
 void backLightPWM(uint8_t intensity) {
-	TCCR2A = (1 << COM2A1) | (1 << WGM21) | (1 << WGM20); 
+	TCCR2A = 0b10000011; // Aktiver PWM
  134:	93 e8       	ldi	r25, 0x83	; 131
  136:	90 93 b0 00 	sts	0x00B0, r25	; 0x8000b0 <__TEXT_REGION_LENGTH__+0x7c00b0>
-	OCR2A = intensity; // Sætter PWM (0-255)
+	OCR2A = intensity; // Indstiller PWM (0–255)
  13a:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7c00b3>
  13e:	08 95       	ret
 
@@ -228,133 +228,129 @@ void backLightPWM(uint8_t intensity) {
 #include "frontLight.h"
 
 void initFrontLight(void) {
-	DDRB |= (1 << PB5); // Pin 11 output
+	DDRB |= (1 << FRONTLIGHT_PIN); // Pin 11 output (PB5)
  140:	84 b1       	in	r24, 0x04	; 4
  142:	80 62       	ori	r24, 0x20	; 32
  144:	84 b9       	out	0x04, r24	; 4
-	DDRB |= (1 << FRONTLIGHT_PIN); // Pin 11 output (PB5)
- 146:	84 b1       	in	r24, 0x04	; 4
- 148:	80 62       	ori	r24, 0x20	; 32
- 14a:	84 b9       	out	0x04, r24	; 4
 	
-	// Timer 1: 8-bit Fast PWM (Mode 5)
-	TCCR1A = (1 << COM1A1) | (1 << WGM10);
- 14c:	81 e8       	ldi	r24, 0x81	; 129
- 14e:	80 93 80 00 	sts	0x0080, r24	; 0x800080 <__TEXT_REGION_LENGTH__+0x7c0080>
-	TCCR1B = (1 << WGM12) | (1 << CS11); // Prescaler 8
- 152:	8a e0       	ldi	r24, 0x0A	; 10
- 154:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7c0081>
+	// Timer 1 sættes i 8-bit Fast PWM non-inverting mode
+	TCCR1A = 0b10000001;           
+ 146:	81 e8       	ldi	r24, 0x81	; 129
+ 148:	80 93 80 00 	sts	0x0080, r24	; 0x800080 <__TEXT_REGION_LENGTH__+0x7c0080>
+	TCCR1B = 0b00001010; // prescaler 8
+ 14c:	8a e0       	ldi	r24, 0x0A	; 10
+ 14e:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7c0081>
 
-	OCR1A = FRONTLIGHT_OFF;
- 158:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
- 15c:	10 92 88 00 	sts	0x0088, r1	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
- 160:	08 95       	ret
+	OCR1A = FRONTLIGHT_OFF; // Forlyset starter slukket
+ 152:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
+ 156:	10 92 88 00 	sts	0x0088, r1	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
+ 15a:	08 95       	ret
 
-00000162 <setFrontLight>:
+0000015c <setFrontLight>:
 }
 
 void setFrontLight(bool state) {
 	if (state == true) {
- 162:	88 23       	and	r24, r24
- 164:	51 f0       	breq	.+20     	; 0x17a <setFrontLight+0x18>
-		OCR1A = FRONTLIGHT_ON;
- 166:	88 ec       	ldi	r24, 0xC8	; 200
- 168:	90 e0       	ldi	r25, 0x00	; 0
- 16a:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
- 16e:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
-		TCCR1A = (1 << COM1A1) | (1 << WGM10);
- 172:	81 e8       	ldi	r24, 0x81	; 129
- 174:	80 93 80 00 	sts	0x0080, r24	; 0x800080 <__TEXT_REGION_LENGTH__+0x7c0080>
- 178:	08 95       	ret
-		} 
-		else {
-		TCCR1A &= ~(1 << COM1A1);
- 17a:	e0 e8       	ldi	r30, 0x80	; 128
- 17c:	f0 e0       	ldi	r31, 0x00	; 0
- 17e:	80 81       	ld	r24, Z
- 180:	8f 77       	andi	r24, 0x7F	; 127
- 182:	80 83       	st	Z, r24
-		OCR1A = FRONTLIGHT_OFF;
- 184:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
- 188:	10 92 88 00 	sts	0x0088, r1	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
- 18c:	08 95       	ret
+ 15c:	88 23       	and	r24, r24
+ 15e:	51 f0       	breq	.+20     	; 0x174 <setFrontLight+0x18>
+		OCR1A = FRONTLIGHT_ON; // Tænd forlys
+ 160:	88 ec       	ldi	r24, 0xC8	; 200
+ 162:	90 e0       	ldi	r25, 0x00	; 0
+ 164:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
+ 168:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
+		TCCR1A = 0b10000001; // Aktivér PWM 
+ 16c:	81 e8       	ldi	r24, 0x81	; 129
+ 16e:	80 93 80 00 	sts	0x0080, r24	; 0x800080 <__TEXT_REGION_LENGTH__+0x7c0080>
+ 172:	08 95       	ret
+	}
+	else {
+		TCCR1A &= 0b01111111; // Deaktivér PWM 
+ 174:	e0 e8       	ldi	r30, 0x80	; 128
+ 176:	f0 e0       	ldi	r31, 0x00	; 0
+ 178:	80 81       	ld	r24, Z
+ 17a:	8f 77       	andi	r24, 0x7F	; 127
+ 17c:	80 83       	st	Z, r24
+		OCR1A = FRONTLIGHT_OFF; // Sluk forlyset
+ 17e:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7c0089>
+ 182:	10 92 88 00 	sts	0x0088, r1	; 0x800088 <__TEXT_REGION_LENGTH__+0x7c0088>
+ 186:	08 95       	ret
 
-0000018e <main>:
+00000188 <main>:
 #include "backLight.h"
 #include "frontLight.h"
 
 int main(void) {
 	// Initialisering af lysmoduler
     initBackLight();
- 18e:	b5 df       	rcall	.-150    	; 0xfa <initBackLight>
+ 188:	b8 df       	rcall	.-144    	; 0xfa <initBackLight>
     initFrontLight();
- 190:	d7 df       	rcall	.-82     	; 0x140 <initFrontLight>
- 192:	81 b1       	in	r24, 0x01	; 1
+ 18a:	da df       	rcall	.-76     	; 0x140 <initFrontLight>
+ 18c:	81 b1       	in	r24, 0x01	; 1
 
     DDRA &= ~(1 << PA0); // SW0 som input
- 194:	8e 7f       	andi	r24, 0xFE	; 254
- 196:	81 b9       	out	0x01, r24	; 1
- 198:	81 b1       	in	r24, 0x01	; 1
+ 18e:	8e 7f       	andi	r24, 0xFE	; 254
+ 190:	81 b9       	out	0x01, r24	; 1
+ 192:	81 b1       	in	r24, 0x01	; 1
     DDRA &= ~(1 << PA1); // SW1 som input
- 19a:	8d 7f       	andi	r24, 0xFD	; 253
- 19c:	81 b9       	out	0x01, r24	; 1
- 19e:	82 b1       	in	r24, 0x02	; 2
+ 194:	8d 7f       	andi	r24, 0xFD	; 253
+ 196:	81 b9       	out	0x01, r24	; 1
+ 198:	82 b1       	in	r24, 0x02	; 2
 
 	// Aktiverer pull-up modstande 
     PORTA |= (1 << PA0); 
- 1a0:	81 60       	ori	r24, 0x01	; 1
- 1a2:	82 b9       	out	0x02, r24	; 2
- 1a4:	82 b1       	in	r24, 0x02	; 2
+ 19a:	81 60       	ori	r24, 0x01	; 1
+ 19c:	82 b9       	out	0x02, r24	; 2
+ 19e:	82 b1       	in	r24, 0x02	; 2
     PORTA |= (1 << PA1); 
- 1a6:	82 60       	ori	r24, 0x02	; 2
- 1a8:	82 b9       	out	0x02, r24	; 2
- 1aa:	80 b1       	in	r24, 0x00	; 0
+ 1a0:	82 60       	ori	r24, 0x02	; 2
+ 1a2:	82 b9       	out	0x02, r24	; 2
+ 1a4:	80 b1       	in	r24, 0x00	; 0
 
     while (1) {
         bool sw0 = !(PINA & (1 << PA0));
- 1ac:	81 70       	andi	r24, 0x01	; 1
- 1ae:	c8 2f       	mov	r28, r24
- 1b0:	80 e0       	ldi	r24, 0x00	; 0
- 1b2:	d8 2f       	mov	r29, r24
- 1b4:	01 99       	sbic	0x00, 1	; 0
+ 1a6:	81 70       	andi	r24, 0x01	; 1
+ 1a8:	c8 2f       	mov	r28, r24
+ 1aa:	80 e0       	ldi	r24, 0x00	; 0
+ 1ac:	d8 2f       	mov	r29, r24
+ 1ae:	01 99       	sbic	0x00, 1	; 0
         bool sw1 = !(PINA & (1 << PA1));
 
 		// Bilen kører
         if (sw1 == true) {
- 1b6:	05 c0       	rjmp	.+10     	; 0x1c2 <main+0x34>
+ 1b0:	05 c0       	rjmp	.+10     	; 0x1bc <main+0x34>
             setFrontLight(true);
- 1b8:	81 e0       	ldi	r24, 0x01	; 1
- 1ba:	d3 df       	rcall	.-90     	; 0x162 <setFrontLight>
+ 1b2:	81 e0       	ldi	r24, 0x01	; 1
+ 1b4:	d3 df       	rcall	.-90     	; 0x15c <setFrontLight>
 			backLightPWM(BACKLIGHT_DRIVE);
- 1bc:	83 e3       	ldi	r24, 0x33	; 51
- 1be:	ba df       	rcall	.-140    	; 0x134 <backLightPWM>
- 1c0:	f4 cf       	rjmp	.-24     	; 0x1aa <main+0x1c>
+ 1b6:	83 e3       	ldi	r24, 0x33	; 51
+ 1b8:	bd df       	rcall	.-134    	; 0x134 <backLightPWM>
+ 1ba:	f4 cf       	rjmp	.-24     	; 0x1a4 <main+0x1c>
         }
 		// Bilen bremser
         else if (sw0 == true) {
- 1c2:	cd 2b       	or	r28, r29
+ 1bc:	cd 2b       	or	r28, r29
             setFrontLight(true);
- 1c4:	29 f4       	brne	.+10     	; 0x1d0 <main+0x42>
- 1c6:	81 e0       	ldi	r24, 0x01	; 1
+ 1be:	29 f4       	brne	.+10     	; 0x1ca <main+0x42>
+ 1c0:	81 e0       	ldi	r24, 0x01	; 1
             backLightPWM(BACKLIGHT_BRAKE);
- 1c8:	cc df       	rcall	.-104    	; 0x162 <setFrontLight>
- 1ca:	8f ef       	ldi	r24, 0xFF	; 255
- 1cc:	b3 df       	rcall	.-154    	; 0x134 <backLightPWM>
+ 1c2:	cc df       	rcall	.-104    	; 0x15c <setFrontLight>
+ 1c4:	8f ef       	ldi	r24, 0xFF	; 255
+ 1c6:	b6 df       	rcall	.-148    	; 0x134 <backLightPWM>
         }
 		// Hvis bilen er slukket
         else {
             // Ingen tryk, så slukkes begge lysmoduler
             setBackLight(false);
- 1ce:	ed cf       	rjmp	.-38     	; 0x1aa <main+0x1c>
- 1d0:	80 e0       	ldi	r24, 0x00	; 0
- 1d2:	9f df       	rcall	.-194    	; 0x112 <setBackLight>
+ 1c8:	ed cf       	rjmp	.-38     	; 0x1a4 <main+0x1c>
+ 1ca:	80 e0       	ldi	r24, 0x00	; 0
+ 1cc:	a2 df       	rcall	.-188    	; 0x112 <setBackLight>
             setFrontLight(false);
- 1d4:	80 e0       	ldi	r24, 0x00	; 0
- 1d6:	c5 df       	rcall	.-118    	; 0x162 <setFrontLight>
- 1d8:	e8 cf       	rjmp	.-48     	; 0x1aa <main+0x1c>
+ 1ce:	80 e0       	ldi	r24, 0x00	; 0
+ 1d0:	c5 df       	rcall	.-118    	; 0x15c <setFrontLight>
+ 1d2:	e8 cf       	rjmp	.-48     	; 0x1a4 <main+0x1c>
 
-000001da <_exit>:
- 1da:	f8 94       	cli
+000001d4 <_exit>:
+ 1d4:	f8 94       	cli
 
-000001dc <__stop_program>:
- 1dc:	ff cf       	rjmp	.-2      	; 0x1dc <__stop_program>
+000001d6 <__stop_program>:
+ 1d6:	ff cf       	rjmp	.-2      	; 0x1d6 <__stop_program>
